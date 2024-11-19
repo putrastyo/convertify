@@ -1,7 +1,6 @@
-# Daftar satuan panjang
 satuan_panjang = ["km", "hm", "dam", "m", "dm", "cm", "mm"]
+isi_data = {}
 
-# Fungsi untuk mengonversi ke meter
 def konversi_ke_meter(nilai, satuan_asal):
     if satuan_asal == "mm":
         return nilai / 1000
@@ -18,7 +17,6 @@ def konversi_ke_meter(nilai, satuan_asal):
     elif satuan_asal == "km":
         return nilai * 1000
 
-# Fungsi untuk mengonversi dari meter
 def konversi_dari_meter(nilai, satuan_tujuan):
     if satuan_tujuan == "mm":
         return nilai * 1000
@@ -35,9 +33,44 @@ def konversi_dari_meter(nilai, satuan_tujuan):
     elif satuan_tujuan == "km":
         return nilai / 1000
 
-# Fungsi untuk mencari indeks satuan dalam daftar satuan panjang
-def cari_indeks_panjang(satuan):
-    if satuan in satuan_panjang:
-        return satuan_panjang.index(satuan)
+def tampilkan_data():
+    if not isi_data:
+        print("Data kosong.")
     else:
-        return -1
+        print("\n Data Panjang Yang Tersedia:")
+        for nama, (nilai, satuan) in isi_data.items():
+            print(f"{nama}: {nilai} {satuan}")
+
+def tambah_panjang(nama, nilai, satuan):
+    if nama in isi_data:
+        print("Data sudah ada. Gunakan nama yang berbeda.")
+    elif satuan not in satuan_panjang:
+        print("Satuan panjang tidak valid.")
+    else:
+        isi_data[nama] = (nilai, satuan)
+        print(f"Data Panjang '{nama}' berhasil ditambahkan.")
+        simpan_txt()
+
+def hapus_panjang(nama):
+    if nama not in isi_data:
+        print("Data Tidak Ditemukan.")
+    else:
+        del isi_data[nama]
+        print(f"Data Panjang '{nama}' berhasil dihapus.")
+        simpan_txt()
+
+def update_panjang(nama, nilai_baru, satuan_baru):
+    if nama not in isi_data:
+        print("Data Tidak Ditemukan.")
+    elif satuan_baru not in satuan_panjang:
+        print("Satuan panjang tidak valid.")
+    else:
+        isi_data[nama] = (nilai_baru, satuan_baru)
+        print(f"\n Panjang '{nama}' berhasil diupdate menjadi {nilai_baru} {satuan_baru}.\n")
+        simpan_txt()
+
+def simpan_txt():
+    with open("length.txt", "w") as file:
+        for nama, (nilai, satuan) in isi_data.items():
+            file.write(f"{nama}: {nilai} {satuan}\n")
+    print("\n Data Berhasil Disimpan.")
