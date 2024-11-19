@@ -33,33 +33,112 @@ while True:
         # 5. hasilkan
         result = operasi_mata_uang(nominal, from_unit, to_unit, currencies)
         print(f"{currencies[to_unit]['name']} {result}")
+
     elif operasi == 2:
-        print("=============")
-        print("Anda memilih: SUHU")
-        print("=============")
-        print("")
+        satuan_suhu = ["Celsius", "Reamur", "Fahrenheit", "Kelvin"]
+        riwayat_suhu = {}
+        riwayat_konversi = []
 
-        print("Daftar satuan suhu yang tersedia:", urutkan_satuan())
-        satuan_input = input("Masukkan satuan suhu input (Celsius/Reamur/Fahrenheit/Kelvin): ")
-
-        if cari_indeks(satuan_input) is None:
-            print("Satuan suhu tidak valid.")
-        else:
-            nilai = float(input(f"Masukkan nilai suhu dalam {satuan_input}: "))
-            satuan_output = input("Masukkan satuan suhu output (Celsius/Reamur/Fahrenheit/Kelvin): ")
-
-            if cari_indeks(satuan_output) is None:
-                print("Satuan suhu tidak valid.")
+        def tampilkan_riwayat():
+            if not riwayat_suhu and not riwayat_konversi:
+                print("Riwayat suhu kosong.")
             else:
-                nilai_celcius = konversi_ke_celcius(nilai, satuan_input)
-                if nilai_celcius is None:
-                    print("Kesalahan pada konversi ke Celcius.")
+                print("\nRiwayat suhu tersimpan:")
+                for nama, (nilai, satuan) in riwayat_suhu.items():
+                    print(f"{nama}: {nilai} {satuan}")
+                print("\nRiwayat konversi suhu:")
+                for item in riwayat_konversi:
+                    print(item)
+
+        def tambah_suhu(nama, nilai, satuan):
+            if nama in riwayat_suhu:
+                print("Nama suhu sudah ada. Gunakan nama yang berbeda.")
+            elif satuan not in satuan_suhu:
+                print("Satuan tidak valid.")
+            else:
+                riwayat_suhu[nama] = (nilai, satuan)
+                print(f"Suhu '{nama}' berhasil ditambahkan.")
+                simpan_ke_file()
+
+        def ubah_suhu(nama, nilai, satuan):
+            if nama not in riwayat_suhu:
+                print("Nama suhu tidak ditemukan.")
+            elif satuan not in satuan_suhu:
+                print("Satuan tidak valid.")
+            else:
+                riwayat_suhu[nama] = (nilai, satuan)
+                print(f"Suhu '{nama}' berhasil diubah.")
+                simpan_ke_file()
+
+        def hapus_suhu(nama):
+            if nama not in riwayat_suhu:
+                print("Nama suhu tidak ditemukan.")
+            else:
+                del riwayat_suhu[nama]
+                print(f"Suhu '{nama}' berhasil dihapus.")
+                simpan_ke_file()
+
+        def simpan_ke_file():
+            with open("temperature.txt", "w") as file:
+                for nama, (nilai, satuan) in riwayat_suhu.items():
+                    file.write(f"{nama}: {nilai} {satuan}\n")
+            print(f"Data {nama} dengan {nilai} {satuan} telah disimpan")
+
+        # Program utama
+        print("Daftar satuan suhu yang tersedia:", urutkan_satuan())
+        while True:
+            print("\nMenu:")
+            print("1. Tambah daftar suhu ke riwayat")
+            print("2. Lihat riwayat suhu")
+            print("3. Ubah suhu di riwayat")
+            print("4. Hapus suhu dari riwayat")
+            print("5. Konversi suhu")
+            print("0. Keluar")
+            
+            pilihan = input("Pilih menu (1/2/3/4/5/0): ")
+            
+            if pilihan == "1":
+                nama = input("Masukkan nama suhu (ex: suhu ruangan): ").lower()
+                nilai = float(input("Masukkan nilai suhxu: "))
+                satuan = input("Masukkan satuan suhu (Celsius/Reamur/Fahrenheit/Kelvin): ")
+                tambah_suhu(nama, nilai, satuan)
+            elif pilihan == "2":
+                tampilkan_riwayat()
+            elif pilihan == "3":
+                nama = input("Masukkan nama suhu yang ingin diubah: ").lower()
+                nilai = float(input("Masukkan nilai baru: "))
+                satuan = input("Masukkan satuan baru (Celsius/Reamur/Fahrenheit/Kelvin): ")
+                ubah_suhu(nama, nilai, satuan)
+            elif pilihan == "4":
+                nama = input("Masukkan nama suhu yang ingin dihapus: ")
+                hapus_suhu(nama)
+            elif pilihan == "5":
+                satuan_input = input("Masukkan satuan suhu input (Celsius/Reamur/Fahrenheit/Kelvin): ")
+                if cari_indeks(satuan_input) is None:
+                    print("Satuan suhu tidak valid.")
                 else:
-                    nilai_akhir = konversi_dari_celcius(nilai_celcius, satuan_output)
-                    if nilai_akhir is None:
-                        print("Kesalahan pada konversi dari Celcius ke satuan output.")
+                    nilai = float(input(f"Masukkan nilai suhu dalam {satuan_input}: "))
+                    satuan_output = input("Masukkan satuan suhu output (Celsius/Reamur/Fahrenheit/Kelvin): ")
+                    if cari_indeks(satuan_output) is None:
+                        print("Satuan suhu tidak valid.")
                     else:
-                        print(f"{nilai} {satuan_input} setara dengan {nilai_akhir:.1f} {satuan_output}")
+                        nilai_celcius = konversi_ke_celcius(nilai, satuan_input)
+                        nilai_akhir = konversi_dari_celcius(nilai_celcius, satuan_output)
+                        hasil_konversi = f"{nilai} {satuan_input} -> {nilai_akhir:.1f} {satuan_output}"
+                        riwayat_konversi.append(hasil_konversi)
+                        print(hasil_konversi)
+            elif pilihan == "0":
+                print("Keluar dari program.")
+                break
+            else:
+                print("Pilihan tidak valid.")
+
+                        
+
+
+
+
+
     elif operasi == 3:
         def tampilkan_menu():
             print("=============")
