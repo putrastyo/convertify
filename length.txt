@@ -1,1 +1,3 @@
-sabun: 20.0 m
+kayu: 10.0 m
+handuk: 77.0 dm
+mobil: 88.0 mm

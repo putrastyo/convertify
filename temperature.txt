@@ -1,1 +1,2 @@
-suhu gelas: 50.0 Celsius
+suhu kamar: 90.0 Celsius
+suhu badan: 90.0 Kelvin

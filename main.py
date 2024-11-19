@@ -1,9 +1,10 @@
 from currency import *
-from temperature import urutkan_satuan, cari_indeks,konversi_ke_celcius, konversi_dari_celcius
-from length import konversi_ke_meter, konversi_dari_meter, cari_indeks_panjang
+from temperature import *
+from length import *
 from display import display_units
 
 while True:
+    print("\n -- SELAMAT DATANG DI CONVERTIFY --")
     print('''
     1. Mata Uang
     2. Suhu
@@ -82,51 +83,6 @@ while True:
         riwayat_suhu = {}
         riwayat_konversi = []
 
-        def tampilkan_riwayat():
-            if not riwayat_suhu and not riwayat_konversi:
-                print("Riwayat suhu kosong.")
-            else:
-                print("\nRiwayat suhu tersimpan:")
-                for nama, (nilai, satuan) in riwayat_suhu.items():
-                    print(f"{nama}: {nilai} {satuan}")
-                print("\nRiwayat konversi suhu:")
-                for item in riwayat_konversi:
-                    print(item)
-
-        def tambah_suhu(nama, nilai, satuan):
-            if nama in riwayat_suhu:
-                print("Nama suhu sudah ada. Gunakan nama yang berbeda.")
-            elif satuan not in satuan_suhu:
-                print("Satuan tidak valid.")
-            else:
-                riwayat_suhu[nama] = (nilai, satuan)
-                print(f"Suhu '{nama}' berhasil ditambahkan.")
-                simpan_ke_file()
-
-        def ubah_suhu(nama, nilai, satuan):
-            if nama not in riwayat_suhu:
-                print("Nama suhu tidak ditemukan.")
-            elif satuan not in satuan_suhu:
-                print("Satuan tidak valid.")
-            else:
-                riwayat_suhu[nama] = (nilai, satuan)
-                print(f"Suhu '{nama}' berhasil diubah.")
-                simpan_ke_file()
-
-        def hapus_suhu(nama):
-            if nama not in riwayat_suhu:
-                print("Nama suhu tidak ditemukan.")
-            else:
-                del riwayat_suhu[nama]
-                print(f"Suhu '{nama}' berhasil dihapus.")
-                simpan_ke_file()
-
-        def simpan_ke_file():
-            with open("temperature.txt", "w") as file:
-                for nama, (nilai, satuan) in riwayat_suhu.items():
-                    file.write(f"{nama}: {nilai} {satuan}\n")
-            print(f"Data {nama} dengan {nilai} {satuan} telah disimpan")
-
         # Program utama
         print("Daftar satuan suhu yang tersedia:", urutkan_satuan())
         while True:
@@ -176,61 +132,11 @@ while True:
             else:
                 print("Pilihan tidak valid.")
 
-                        
-
-
-
-
 
     elif operasi == 3:
-        # Daftar satuan panjang
         satuan_panjang = ["km", "hm", "dam", "m", "dm", "cm", "mm"]
         isi_data = {}
 
-        def tampilkan_data():
-            if not isi_data:
-                print("Data kosong.")
-            else:
-                print("\n Data Panjang Yang Tersedia:")
-                for nama, (nilai, satuan) in isi_data.items():
-                    print(f"{nama}: {nilai} {satuan}")
-
-        def tambah_panjang(nama, nilai, satuan):
-            if nama in isi_data:
-                print("Data sudah ada. Gunakan nama yang berbeda.")
-            elif satuan not in satuan_panjang:
-                print("Satuan panjang tidak valid.")
-            else:
-                isi_data[nama] = (nilai, satuan)
-                print(f"Data Panjang '{nama}' berhasil ditambahkan.")
-                simpan_ke_file()
-
-        def hapus_panjang(nama):
-            if nama not in isi_data:
-                print("Nama panjang tidak ditemukan.")
-            else:
-                del isi_data[nama]
-                print(f"Data Panjang '{nama}' berhasil dihapus.")
-                simpan_ke_file()
-
-        def update_panjang(nama, nilai_baru, satuan_baru):
-            if nama not in isi_data:
-                print("Nama panjang tidak ditemukan.")
-            elif satuan_baru not in satuan_panjang:
-                print("Satuan panjang tidak valid.")
-            else:
-                # Update nilai dan satuan
-                isi_data[nama] = (nilai_baru, satuan_baru)
-                print(f"\n Panjang '{nama}' berhasil diupdate menjadi {nilai_baru} {satuan_baru}.\n")
-                simpan_ke_file()
-
-        def simpan_ke_file():
-            with open("length.txt", "w") as file:
-                for nama, (nilai, satuan) in isi_data.items():
-                    file.write(f"{nama}: {nilai} {satuan}\n")
-            print("\n Data Berhasil Disimpan.")
-
-        # Program utama
         while True:
             print("\nMenu:")
             print("1. Konversi Satuan Panjang")
@@ -287,7 +193,6 @@ while True:
                 if not isi_data:
                     print("Riwayat panjang kosong.")
                 else:
-                    # Mengonversi dictionary menjadi list dan mengurutkannya berdasarkan nama
                     sorted_riwayat = sorted(isi_data.items())
                     
                     print("\n -- Urutan Data Panjang Barang Berdasarkan Abjad --")
