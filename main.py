@@ -140,156 +140,123 @@ while True:
 
 
     elif operasi == 3:
-        def tampilkan_menu():
-            print("=============")
-            print("KONVERSI SATUAN PANJANG")
-            print("=============")
-            print("Menu:")
-            print("1. Konversi Panjang")
-            print("2. Lihat Panjang Barang")
-            print("3. Tambah Panjang")
-            print("4. Edit Barang")
-            print("5. Urutkan Barang")
-            print("6. Hapus Barang")
-            print("7. Keluar")
-            print("=============")
+        # Daftar satuan panjang
+        satuan_panjang = ["km", "hm", "dam", "m", "dm", "cm", "mm"]
+        isi_data = {}
 
-        def konversi_panjang():
-            print("Anda memilih: KONVERSI PANJANG")
-            
-            satuan_input = input("Masukkan satuan panjang input (km/hm/dam/m/dm/cm/mm): ").lower()
-            
-            if cari_indeks_panjang(satuan_input) == -1:
-                print("Satuan panjang tidak valid.")
-                return
-            
-            nilai = float(input(f"Masukkan nilai panjang dalam {satuan_input}: "))
-            satuan_output = input("Masukkan satuan panjang output (km/hm/dam/m/dm/cm/mm): ").lower()
-            
-            if cari_indeks_panjang(satuan_output) == -1:
-                print("Satuan panjang tidak valid.")
-                return
-            
-            nilai_meter = konversi_ke_meter(nilai, satuan_input)
-            
-            if nilai_meter is None:
-                print("Kesalahan pada konversi ke meter.")
-                return
-            
-            nilai_akhir = konversi_dari_meter(nilai_meter, satuan_output)
-            
-            if nilai_akhir is None:
-                print("Kesalahan pada konversi dari meter ke satuan output.")
-                return
-            
-            hasil_konversi = f"{nilai} {satuan_input} setara dengan {nilai_akhir} {satuan_output}"
-            print(hasil_konversi)
-
-        def lihat_panjang_barang():
-            with open("length.txt", "r") as file:
-                data_barang = file.readlines()
-                if not data_barang:
-                    print("\nTidak ada data barang.\n")
-                else:
-                    print("\nData Panjang Barang:")
-                    for line in data_barang:
-                        print(line.strip())
-
-        def tambah_panjang_barang():
-            nama_barang = input("Masukkan nama barang: ").lower()
-            panjang_barang = input("Masukkan panjang barang (misalnya 10 cm): ")
-            
-            with open("length.txt", "a") as file:
-                file.write(f"{nama_barang}: {panjang_barang}\n")
-            
-            print(f"Data '{nama_barang}' dengan panjang '{panjang_barang}' berhasil ditambahkan.")
-
-        def hapus_barang():
-            lihat_panjang_barang()
-            
-            nama_barang = input("\n Masukkan nama barang yang ingin dihapus: ").lower()
-            
-            with open("length.txt", "r") as file:
-                data_barang = file.readlines()
-            
-            with open("length.txt", "w") as file:
-                for line in data_barang:
-                    if not line.startswith(nama_barang):
-                        file.write(line)
-                    else:
-                        print(f"\nData '{nama_barang}' berhasil dihapus.\n")
-
-        def edit_barang():
-            lihat_panjang_barang()
-            
-            nama_barang = input("\n Masukkan Nama Barang Yang Ingin Diedit: ").lower()
-            
-            with open("length.txt", "r") as file:
-                data_barang = file.readlines()
-            
-            found = False
-            for i in range(len(data_barang)):
-                if data_barang[i].startswith(nama_barang):
-                    found = True
-                    new_value = input(f"Masukkan nilai baru untuk '{nama_barang}': ")
-                    data_barang[i] = f"{nama_barang}: {new_value}\n"
-                    break
-            
-            if found:
-                with open("length.txt", "w") as file:
-                    file.writelines(data_barang)
-                print(f"Data '{nama_barang}' berhasil diubah.")
+        def tampilkan_data():
+            if not isi_data:
+                print("Data kosong.")
             else:
-                print(f"Data '{nama_barang}' tidak ditemukan.")
+                print("\n Data Panjang Yang Tersedia:")
+                for nama, (nilai, satuan) in isi_data.items():
+                    print(f"{nama}: {nilai} {satuan}")
 
-        def urutkan_barang():
-            try:
-                with open("length.txt", "r") as file:
-                    data_barang = file.readlines()
+        def tambah_panjang(nama, nilai, satuan):
+            if nama in isi_data:
+                print("Data sudah ada. Gunakan nama yang berbeda.")
+            elif satuan not in satuan_panjang:
+                print("Satuan panjang tidak valid.")
+            else:
+                isi_data[nama] = (nilai, satuan)
+                print(f"Data Panjang '{nama}' berhasil ditambahkan.")
+                simpan_ke_file()
 
-                # Mengurutkan berdasarkan nama barang
-                data_barang.sort(key=lambda x: x.split(':')[0])
+        def hapus_panjang(nama):
+            if nama not in isi_data:
+                print("Nama panjang tidak ditemukan.")
+            else:
+                del isi_data[nama]
+                print(f"Data Panjang '{nama}' berhasil dihapus.")
+                simpan_ke_file()
 
-                # Menampilkan hasil urutan
-                if not data_barang:
-                    print("\nTidak ada data barang untuk diurutkan.\n")
-                else:
-                    print("\nData Panjang Barang setelah diurutkan:")
-                    for line in data_barang:
-                        print(line.strip())
+        def update_panjang(nama, nilai_baru, satuan_baru):
+            if nama not in isi_data:
+                print("Nama panjang tidak ditemukan.")
+            elif satuan_baru not in satuan_panjang:
+                print("Satuan panjang tidak valid.")
+            else:
+                # Update nilai dan satuan
+                isi_data[nama] = (nilai_baru, satuan_baru)
+                print(f"\n Panjang '{nama}' berhasil diupdate menjadi {nilai_baru} {satuan_baru}.\n")
+                simpan_ke_file()
 
-                # Menyimpan kembali hasil urutan ke dalam file
-                with open("length.txt", "w") as file:
-                    file.writelines(data_barang)
-
-            except FileNotFoundError:
-                print("File length.txt tidak ditemukan.")
+        def simpan_ke_file():
+            with open("length.txt", "w") as file:
+                for nama, (nilai, satuan) in isi_data.items():
+                    file.write(f"{nama}: {nilai} {satuan}\n")
+            print("\n Data Berhasil Disimpan.")
 
         # Program utama
         while True:
-            tampilkan_menu()
+            print("\nMenu:")
+            print("1. Konversi Satuan Panjang")
+            print("2. Lihat Data")
+            print("3. Tambah Data")
+            print("4. Update Data")
+            print("5. Hapus Data")
+            print("6. Urutkan Data")
+            print("0. Keluar")
             
-            pilihan = input("Pilih menu: ")
+            pilihan = input("Pilih menu (1/2/3/4/5/6/0): ")
             
             if pilihan == '1':
-                konversi_panjang()
+                satuan_input = input("Masukkan satuan panjang input (km/hm/dam/m/dm/cm/mm): ").lower()
+                
+                if satuan_input not in satuan_panjang:
+                    print("Satuan panjang tidak valid.")
+                    continue
+                
+                nilai = float(input(f"Masukkan nilai panjang dalam {satuan_input}: "))
+                
+                satuan_output = input("Masukkan satuan panjang output (km/hm/dam/m/dm/cm/mm): ").lower()
+                
+                if satuan_output not in satuan_panjang:
+                    print("Satuan panjang tidak valid.")
+                    continue
+                
+                nilai_meter = konversi_ke_meter(nilai, satuan_input)
+                nilai_akhir = konversi_dari_meter(nilai_meter, satuan_output)
+                
+                hasil_konversi = f"{nilai} {satuan_input} setara dengan {nilai_akhir} {satuan_output}"
+                print(hasil_konversi)
+            
             elif pilihan == '2':
-                lihat_panjang_barang()
+                tampilkan_data()
+            
             elif pilihan == '3':
-                tambah_panjang_barang()
+                nama = input("Masukkan nama panjang: ").lower()
+                nilai = float(input("Masukkan nilai panjang: "))
+                satuan = input("Masukkan Satuan Panjangnya (km/hm/dam/m/dm/cm/mm): ").lower()
+                tambah_panjang(nama, nilai, satuan)
+            
             elif pilihan == '4':
-                edit_barang()
+                nama = input("Masukkan nama barang yang ingin diubah: ").lower()
+                nilai = float(input("Masukkan nilai baru: "))
+                satuan = input("Masukkan satuan baru (km/hm/dam/m/dm/cm/mm): ")
+                update_panjang(nama, nilai, satuan)
+
             elif pilihan == '5':
-                urutkan_barang()
+                nama = input("Masukkan nama panjang yang ingin dihapus: ").lower()
+                hapus_panjang(nama)
+
             elif pilihan == '6':
-                hapus_barang()
-            elif pilihan == '7':
-                print("=============================")
-                print("Terimakasih dan Sampai Jumpa!")
-                print("=============================")
-                exit()
+                if not isi_data:
+                    print("Riwayat panjang kosong.")
+                else:
+                    # Mengonversi dictionary menjadi list dan mengurutkannya berdasarkan nama
+                    sorted_riwayat = sorted(isi_data.items())
+                    
+                    print("\n -- Urutan Data Panjang Barang Berdasarkan Abjad --")
+                    for nama, (nilai, satuan) in sorted_riwayat:
+                        print(f"{nama}: {nilai} {satuan}")
+            
+            elif pilihan == '0':
+                print("Keluar dari program.")
+                break
+            
             else:
-                print("Pilihan tidak valid. Silakan coba lagi.")
+                print("Pilihan tidak valid.")
                 
     elif operasi == 4:
         print("=============================")
