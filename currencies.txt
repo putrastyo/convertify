@@ -1,0 +1,7 @@
+1|USD|Dolar Amerika|1.0
+2|EUR|Euro|0.85
+3|JPY|Yen|110.0
+4|GBP|Pound Sterling|0.75
+5|AUD|Dolat Australia|1.35
+6|IDR|Rupiah|15000.07
+7|Baru|BRU|2.0

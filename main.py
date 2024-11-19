@@ -1,18 +1,17 @@
-from currency import get_currencies, operasi_mata_uang
-from temperature import urutkan_satuan, cari_indeks,konversi_ke_celcius, konversi_dari_celcius, tampilkan_riwayat, tambah_suhu, ubah_suhu, hapus_suhu, simpan_ke_file
-from length import konversi_ke_meter, konversi_dari_meter, tampilkan_data, tambah_panjang, update_panjang, hapus_panjang, simpan_txt 
+from currency import *
+from temperature import *
+from length import *
 from display import display_units
 
-print("\n -- SELAMAT DATANG DI CONVERTIFY --")
-print('''
-1. Mata Uang
-2. Suhu
-3. Satuan Panjang
-4. keluar Aplikasi
-''')
-
 while True:
-    operasi = int(input('Operasi Nomor Berapa Yang Anda Pilih? '))
+    print("\n -- SELAMAT DATANG DI CONVERTIFY --")
+    print('''
+    1. Mata Uang
+    2. Suhu
+    3. Satuan Panjang
+    4. keluar Aplikasi
+    ''')
+    operasi = int(input('Operasi nomor berapa yang anda pilih? '))
 
     if operasi < 0 or operasi > 4:
         print('Operasi tidak valid.')
@@ -22,18 +21,62 @@ while True:
         print("=============")
         print("")
 
-        # 1. Masukkan nominal
-        nominal = int(input('Masukkan nominal ---> '))
-        # 2. dapetin satuan-satuannya
-        currencies = get_currencies()
-        # 3. tampilin satuan-sataunnya
-        display_units(currencies)
-        # 4. Pilih mau ubah dari mana ke mana
-        from_unit = int(input("ubah dari: "))
-        to_unit = int(input("menjadi: "))
-        # 5. hasilkan
-        result = operasi_mata_uang(nominal, from_unit, to_unit, currencies)
-        print(f"{currencies[to_unit]['name']} {result}")
+        currencies = read_currencies_from_file()
+        if not currencies:
+            currencies = get_currencies()
+            save_currencies_to_file(currencies)
+
+        while True:
+            print("\nCurrency Manager")
+            print("1. View Currencies")
+            print("2. Add Currency")
+            print("3. Update Currency")
+            print("4. Delete Currency")
+            print("5. Convert")
+            print("6. Exit")
+
+            try:
+                option = int(input('Masukkan pilihan ---> '))
+                if option == 1:
+                    display_currencies(currencies)
+                elif option == 2:
+                    try:
+                        currency_id = int(input("Masukkan ID: "))
+                        if currency_id in currencies:
+                            print("ID sudah ada.")
+                            continue
+                        name = input("Masukkan nama mata uang: ")
+                        alias = input("Masukkan alias: ")
+                        in_usd = float(input("Masukkan nilai dalam USD: "))
+                        currencies[currency_id] = {'name': name, 'alias': alias, 'in_usd': in_usd}
+                        save_currencies_to_file(currencies)
+                        print(f"Mata uang '{name}' berhasil ditambahkan.")
+                    except ValueError:
+                        print("Input tidak valid. Silakan coba lagi.")
+                elif option == 3:
+                    update_currency(currencies)
+                elif option == 4:
+                    delete_currency(currencies)
+                elif option == 5:
+                    try:
+                        nominal = float(input('Masukkan nominal ---> '))
+                        display_currencies(currencies)
+                        from_unit = int(input("Ubah dari (ID): "))
+                        to_unit = int(input("Menjadi (ID): "))
+                        if from_unit in currencies and to_unit in currencies:
+                            result = operasi_mata_uang(nominal, from_unit, to_unit, currencies)
+                            print(f"{currencies[to_unit]['name']} {result:.2f}")
+                        else:
+                            print("ID mata uang tidak valid.")
+                    except ValueError:
+                        print("Input tidak valid. Silakan coba lagi.")
+                elif option == 6:
+                    print("Goodbye!")
+                    break
+                else:
+                    print("Pilihan tidak valid. Silakan pilih antara 1-6.")
+            except ValueError:
+                print("Input tidak valid. Silakan masukkan angka.")
 
     elif operasi == 2:
         satuan_suhu = ["Celsius", "Reamur", "Fahrenheit", "Kelvin"]
@@ -169,6 +212,6 @@ while True:
         print("=============================")
         break
 
-    print("")
+    print()
     print("==================================")
-    print("")
+    print()
