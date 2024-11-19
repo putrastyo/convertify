@@ -113,8 +113,20 @@ while True:
                 nama = input("Masukkan nama suhu yang ingin dihapus: ")
                 hapus_suhu(nama)
             elif pilihan == "5":
-                # Implementasi konversi suhu bisa ditambahkan di sini
-                pass
+                satuan_input = input("Masukkan satuan suhu input (Celsius/Reamur/Fahrenheit/Kelvin): ")
+                if cari_indeks(satuan_input) is None:
+                    print("Satuan suhu tidak valid.")
+                else:
+                    nilai = float(input(f"Masukkan nilai suhu dalam {satuan_input}: "))
+                    satuan_output = input("Masukkan satuan suhu output (Celsius/Reamur/Fahrenheit/Kelvin): ")
+                    if cari_indeks(satuan_output) is None:
+                        print("Satuan suhu tidak valid.")
+                    else:
+                        nilai_celcius = konversi_ke_celcius(nilai, satuan_input)
+                        nilai_akhir = konversi_dari_celcius(nilai_celcius, satuan_output)
+                        hasil_konversi = f"{nilai} {satuan_input} -> {nilai_akhir:.1f} {satuan_output}"
+                        riwayat_konversi.append(hasil_konversi)
+                        print(hasil_konversi)
             elif pilihan == "0":
                 print("Keluar dari program.")
                 break
