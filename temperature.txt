@@ -1,2 +1,1 @@
-suhu kamar: 90.0 Celsius
-suhu badan: 90.0 Kelvin
+suhu ruangan: 23.0 Celsius
